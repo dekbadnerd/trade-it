@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Agent metadata
+.agent/
+.agents/
+skills-lock.json
+
+# Test and cache output
+coverage/
+.cache/
+.vite/
+
+# Temporary files
+*.tmp
+*.temp

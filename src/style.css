@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: oklch(15% 0.018 74);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.status-pill {
+  @apply rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide;
+}
+
+.card {
+  @apply rounded-lg border border-line bg-panel shadow-premium;
+}
+
+.premium-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background:
+    radial-gradient(circle at 12% 0%, oklch(82% 0.15 82 / 0.16), transparent 28rem),
+    radial-gradient(circle at 86% 8%, oklch(69% 0.17 306 / 0.08), transparent 24rem),
+    linear-gradient(180deg, oklch(18% 0.02 74), oklch(13% 0.018 74));
+}
+
+.premium-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    radial-gradient(circle at 1px 1px, oklch(82% 0.15 82 / 0.22) 1px, transparent 0),
+    linear-gradient(120deg, transparent 0 46%, oklch(82% 0.15 82 / 0.08) 47% 48%, transparent 49% 100%);
+  background-size: 34px 34px, 180px 180px;
+  mask-image: linear-gradient(180deg, black, transparent 78%);
+}
+
+.rune-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.rune-panel::before {
+  content: "✦";
+  position: absolute;
+  right: 1rem;
+  top: 0.35rem;
+  color: oklch(82% 0.15 82 / 0.18);
+  font-size: 4rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.rarity-card {
+  @apply relative overflow-hidden rounded-lg border bg-raised p-4 shadow-rarity;
+}
+
+.rarity-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, var(--rarity-glow, oklch(82% 0.15 82 / 0.16)), transparent 32%),
+    radial-gradient(circle at 82% 18%, var(--rarity-glow, oklch(82% 0.15 82 / 0.16)), transparent 11rem);
+  opacity: 0.76;
+  pointer-events: none;
+}
+
+.rarity-card > * {
+  position: relative;
+}
+
+.rarity-epic {
+  --rarity-glow: oklch(69% 0.17 306 / 0.2);
+  border-color: oklch(69% 0.17 306 / 0.52);
+}
+
+.rarity-legendary {
+  --rarity-glow: oklch(78% 0.16 64 / 0.22);
+  border-color: oklch(82% 0.15 82 / 0.55);
+}
+
+.rarity-mythic {
+  --rarity-glow: oklch(70% 0.19 28 / 0.2);
+  border-color: oklch(70% 0.19 28 / 0.52);
+}
+
+.focus-gold {
+  outline: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.focus-gold:focus {
+  border-color: oklch(82% 0.15 82);
+  box-shadow: 0 0 0 2px oklch(82% 0.15 82 / 0.32);
+}
+
+.balance-pulse {
+  animation: balance-pulse 420ms ease-out;
+}
+
+@keyframes balance-pulse {
+  0% {
+    transform: scale(1);
+    color: oklch(97% 0.004 86);
+  }
+
+  45% {
+    transform: scale(1.04);
+    color: oklch(91% 0.09 86);
+  }
+
+  100% {
+    transform: scale(1);
+    color: oklch(82% 0.15 82);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
