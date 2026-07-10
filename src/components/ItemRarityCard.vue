@@ -1,38 +1,41 @@
 <template>
-  <article class="rarity-card" :class="rarityClass">
-    <div class="flex items-start justify-between gap-3">
-      <div class="min-w-0">
-        <p class="text-xs font-bold uppercase tracking-[0.16em] text-muted">{{ item.owner }}</p>
-        <h2 class="mt-2 break-words text-xl font-black leading-snug text-ink">{{ item.name }}</h2>
+  <el-card class="rarity-card" :class="rarityClass" shadow="never">
+    <div class="rarity-card-shell">
+      <div class="rarity-card-header">
+        <div class="min-w-0">
+        <p class="text-xs font-bold uppercase tracking-[0.14em] text-muted">{{ item.owner }}</p>
+          <h2 class="rarity-item-name">{{ item.name }}</h2>
       </div>
-      <span class="status-pill inline-flex shrink-0 items-center gap-1.5" :class="badgeClass">
-        <SparklesIcon class="h-3.5 w-3.5" aria-hidden="true" />
+      <el-tag class="rarity-tag shrink-0" :class="badgeClass" effect="light">
+        <el-icon class="mr-1"><Star /></el-icon>
         {{ normalizedRarity }}
-      </span>
+      </el-tag>
     </div>
 
-    <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-muted">Vault Value</p>
-        <p class="mt-1 text-3xl font-black text-cocoa">{{ money(item.value) }}</p>
+      <div class="rarity-card-footer">
+        <div class="rarity-price-block">
+        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Vault Value</p>
+          <p class="rarity-price">{{ money(item.value) }}</p>
       </div>
-      <div class="flex flex-wrap gap-2">
-        <span v-if="insured" class="status-pill inline-flex items-center gap-1.5 border-gold/70 bg-gold/25 text-ink">
-          <ShieldCheckIcon class="h-3.5 w-3.5" aria-hidden="true" />
+        <div class="rarity-seal-stack">
+        <el-tag v-if="insured" class="protected-tag" effect="light">
+          <el-icon class="mr-1"><CircleCheck /></el-icon>
           Protected
-        </span>
-        <span class="status-pill inline-flex items-center gap-1.5 border-line bg-raised text-cocoa">
-          <TagIcon class="h-3.5 w-3.5" aria-hidden="true" />
+        </el-tag>
+        <el-tag class="seal-tag" effect="plain">
+          <el-icon class="mr-1"><CollectionTag /></el-icon>
           {{ seal }}
-        </span>
+        </el-tag>
       </div>
     </div>
-  </article>
+    </div>
+  </el-card>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { ShieldCheckIcon, SparklesIcon, TagIcon } from '@heroicons/vue/24/outline'
+import { CircleCheck, CollectionTag, Star } from '@element-plus/icons-vue'
+import { formatMoney as money } from '../composables/useMoney'
 
 const props = defineProps({
   item: {
@@ -54,15 +57,9 @@ const rarityKey = computed(() => normalizedRarity.value.toLowerCase())
 const rarityClass = computed(() => `rarity-${rarityKey.value}`)
 
 const badgeClass = computed(() => {
-  if (rarityKey.value === 'mythic') return 'border-mythic/40 bg-mythic/10 text-mythic'
-  if (rarityKey.value === 'epic') return 'border-epic/40 bg-epic/10 text-epic'
-  return 'border-gold/70 bg-gold/25 text-ink'
+  if (rarityKey.value === 'mythic') return 'rarity-tag-mythic'
+  if (rarityKey.value === 'epic') return 'rarity-tag-epic'
+  return 'rarity-tag-legendary'
 })
 
-const money = (value) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(value)
 </script>

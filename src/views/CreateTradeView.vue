@@ -1,111 +1,114 @@
 <template>
   <section class="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-    <div class="card p-5 sm:p-6">
-      <p class="text-sm font-bold text-cocoa">Create Artifact Trade</p>
-      <h1 class="mt-3 flex items-start gap-3 text-3xl font-black text-ink">
-        <PlusCircleIcon class="mt-1 h-8 w-8 shrink-0 text-cocoa" aria-hidden="true" />
-        <span>Price the swap before anyone hands over loot.</span>
-      </h1>
-      <p class="mt-3 leading-7 text-muted">
-        Premium Protection adds a clear 1.5% insurance fee to the higher item value. It makes the startup monetization model visible during the pitch.
-      </p>
+    <el-card class="rune-panel" shadow="never">
+      <template #header>
+        <p class="text-sm font-bold text-cocoa">Create Artifact Trade</p>
+        <h1 class="mt-3 flex items-start gap-3 text-3xl font-black text-ink">
+          <el-icon class="mt-1 shrink-0 text-cocoa" :size="32"><CirclePlus /></el-icon>
+          <span>Price the swap before anyone hands over loot.</span>
+        </h1>
+        <p class="mt-3 leading-7 text-muted">
+          Premium Protection prices the higher-value artifact by rarity tier, so expensive rare loot gets a clear protection fee before either party commits.
+        </p>
+      </template>
 
-      <form class="mt-6 space-y-5" @submit.prevent="submitTrade">
+      <el-form class="trade-form" label-position="top" @submit.prevent>
         <div class="grid gap-4 sm:grid-cols-2">
-          <label class="block">
-            <span class="text-sm font-medium text-muted">Your Artifact A</span>
-            <input v-model="form.itemA.name" required class="focus-gold mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-ink placeholder:text-muted" />
-          </label>
-          <label class="block">
-            <span class="text-sm font-medium text-muted">Artifact A Value</span>
-            <input v-model.number="form.itemA.value" required min="1" type="number" class="focus-gold mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-ink" />
-          </label>
+          <el-form-item label="Your Artifact A" required>
+            <el-input v-model="form.itemA.name" size="large" />
+          </el-form-item>
+          <el-form-item label="Artifact A Value" required>
+            <el-input-number v-model="form.itemA.value" class="w-full" :min="1" :controls="false" size="large" />
+          </el-form-item>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2">
-          <label class="block">
-            <span class="text-sm font-medium text-muted">Counterparty Artifact B</span>
-            <input v-model="form.itemB.name" required class="focus-gold mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-ink" />
-          </label>
-          <label class="block">
-            <span class="text-sm font-medium text-muted">Artifact B Value</span>
-            <input v-model.number="form.itemB.value" required min="1" type="number" class="focus-gold mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-ink" />
-          </label>
+          <el-form-item label="Counterparty Artifact B" required>
+            <el-input v-model="form.itemB.name" size="large" />
+          </el-form-item>
+          <el-form-item label="Artifact B Value" required>
+            <el-input-number v-model="form.itemB.value" class="w-full" :min="1" :controls="false" size="large" />
+          </el-form-item>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2">
-          <label class="block">
-            <span class="text-sm font-medium text-muted">Artifact A Rarity</span>
-            <select v-model="form.itemA.rarity" class="focus-gold mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-ink">
-              <option v-for="rarity in rarityOptions" :key="rarity" :value="rarity">{{ rarity }}</option>
-            </select>
-          </label>
-          <label class="block">
-            <span class="text-sm font-medium text-muted">Artifact B Rarity</span>
-            <select v-model="form.itemB.rarity" class="focus-gold mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-ink">
-              <option v-for="rarity in rarityOptions" :key="rarity" :value="rarity">{{ rarity }}</option>
-            </select>
-          </label>
+          <el-form-item label="Artifact A Rarity">
+            <el-select v-model="form.itemA.rarity" class="w-full" size="large">
+              <el-option v-for="rarity in rarityOptions" :key="rarity" :label="rarity" :value="rarity" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Artifact B Rarity">
+            <el-select v-model="form.itemB.rarity" class="w-full" size="large">
+              <el-option v-for="rarity in rarityOptions" :key="rarity" :label="rarity" :value="rarity" />
+            </el-select>
+          </el-form-item>
         </div>
 
-        <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-gold/70 bg-gold/20 p-4 transition hover:bg-gold/30">
-          <input v-model="form.insurance" type="checkbox" class="mt-1 h-5 w-5 accent-gold" />
-          <span>
-            <span class="flex items-center gap-2 font-bold text-ink">
-              <ShieldCheckIcon class="h-4 w-4 text-cocoa" aria-hidden="true" />
+        <el-card class="insurance-option" shadow="never">
+          <el-checkbox v-model="form.insurance" size="large">
+            <span class="inline-flex items-center gap-2 font-bold text-ink">
+              <el-icon><CircleCheck /></el-icon>
               Premium Protection (Insurance)
             </span>
-            <span class="text-sm leading-6 text-muted">Adds 1.5% coverage fee and prioritizes dispute review.</span>
-          </span>
-        </label>
+          </el-checkbox>
+          <p class="mt-2 text-sm leading-6 text-muted">Adds tier-based coverage fee and prioritizes dispute review.</p>
+        </el-card>
 
-        <button type="submit" :disabled="isCreating" class="min-h-12 w-full rounded-md bg-gold px-5 py-3 font-black text-ink transition hover:bg-gold-soft disabled:cursor-not-allowed disabled:opacity-60">
-          <span v-if="isCreating">Creating escrow room...</span>
-          <span v-else>Create Trade</span>
-        </button>
-      </form>
-    </div>
+        <el-button class="mt-5 w-full" type="primary" size="large" :loading="isCreating" @click="submitTrade">
+          {{ isCreating ? 'Creating escrow room...' : 'Create Trade' }}
+        </el-button>
+      </el-form>
+    </el-card>
 
-    <aside class="card overflow-hidden">
-      <div class="bg-gold p-5 text-ink sm:p-6">
-        <p class="inline-flex items-center gap-2 text-sm font-bold text-ink/65">
-          <ReceiptPercentIcon class="h-4 w-4" aria-hidden="true" />
-          Fee Preview
-        </p>
-        <h2 class="mt-2 text-2xl font-black">Premium Protection economics</h2>
-      </div>
-      <div class="space-y-4 p-5 sm:p-6">
-        <div class="flex justify-between gap-4 border-b border-line pb-3">
-          <span class="text-muted">Protected value</span>
-          <span class="font-bold text-ink">{{ money(protectedValue) }}</span>
-        </div>
-        <div class="flex justify-between gap-4 border-b border-line pb-3">
-          <span class="text-muted">Insurance rate</span>
-          <span class="font-bold text-ink">{{ form.insurance ? '1.5%' : '0%' }}</span>
-        </div>
-        <div class="flex justify-between gap-4 border-b border-line pb-3">
-          <span class="text-muted">Premium Protection fee</span>
-          <span class="font-bold text-cocoa">{{ money(insuranceFee) }}</span>
-        </div>
-        <div class="flex justify-between gap-4 text-lg">
-          <span class="text-muted">Escrow total</span>
-          <span class="font-black text-cocoa">{{ money(protectedValue + insuranceFee) }}</span>
-        </div>
-      </div>
+    <aside>
+      <el-card class="overflow-hidden" shadow="never">
+        <template #header>
+          <p class="inline-flex items-center gap-2 text-sm font-bold text-cocoa">
+            <el-icon><Discount /></el-icon>
+            Fee Preview
+          </p>
+          <h2 class="mt-2 text-2xl font-black text-ink">Premium Protection economics</h2>
+        </template>
 
-      <div class="mx-5 mb-5 rounded-lg border border-line bg-raised p-4 sm:mx-6 sm:mb-6">
-        <p class="inline-flex items-center gap-2 font-semibold text-ink">
-          <SparklesIcon class="h-4 w-4 text-cocoa" aria-hidden="true" />
-          Rarity preview
-        </p>
-        <p class="mt-2 text-sm leading-6 text-muted">
+        <div class="space-y-4">
+          <div class="wallet-row">
+            <span>Protected value</span>
+            <strong>{{ money(protectedValue) }}</strong>
+          </div>
+          <div class="wallet-row">
+            <span>Protected rarity</span>
+            <strong>{{ protectedRarity }}</strong>
+          </div>
+          <div class="wallet-row">
+            <span>Protection rate</span>
+            <strong>{{ form.insurance ? formatPercent(protectionRate) : '0%' }}</strong>
+          </div>
+          <div class="wallet-row">
+            <span>Premium Protection fee</span>
+            <strong class="text-cocoa">{{ money(insuranceFee) }}</strong>
+          </div>
+          <div class="flex justify-between gap-4 text-lg">
+            <span class="text-muted">Escrow total</span>
+            <strong class="text-cocoa">{{ money(protectedValue + insuranceFee) }}</strong>
+          </div>
+        </div>
+      </el-card>
+
+      <el-card class="mt-5" shadow="never">
+        <template #header>
+          <p class="inline-flex items-center gap-2 font-semibold text-ink">
+            <el-icon><Star /></el-icon>
+            Rarity preview
+          </p>
+        </template>
+        <p class="text-sm leading-6 text-muted">
           Mock rarity helps the pitch feel like an MMORPG inventory while keeping all trade data local.
         </p>
         <div class="mt-4 grid gap-3">
           <ItemRarityCard :item="previewItemA" :insured="form.insurance" seal="Your Vault" />
           <ItemRarityCard :item="previewItemB" :insured="form.insurance" seal="Counterparty" />
         </div>
-      </div>
+      </el-card>
     </aside>
   </section>
 </template>
@@ -113,17 +116,13 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {
-  PlusCircleIcon,
-  ReceiptPercentIcon,
-  ShieldCheckIcon,
-  SparklesIcon,
-} from '@heroicons/vue/24/outline'
+import { CircleCheck, CirclePlus, Discount, Star } from '@element-plus/icons-vue'
 import ItemRarityCard from '../components/ItemRarityCard.vue'
+import { formatMoney as money, formatPercent } from '../composables/useMoney'
 import { useTradeStore } from '../composables/useTradeStore'
 
 const router = useRouter()
-const { createTrade, insuranceFeeFor } = useTradeStore()
+const { createTrade, feeRateForRarity, insuranceFeeFor, rarityOptions } = useTradeStore()
 const isCreating = ref(false)
 
 const form = reactive({
@@ -133,13 +132,18 @@ const form = reactive({
   insurance: true,
 })
 
-const rarityOptions = ['Epic', 'Legendary', 'Mythic']
 const protectedValue = computed(() => Math.max(Number(form.itemA.value) || 0, Number(form.itemB.value) || 0))
-const insuranceFee = computed(() => insuranceFeeFor(protectedValue.value, form.insurance))
+const protectedRarity = computed(() =>
+  Number(form.itemA.value) >= Number(form.itemB.value) ? form.itemA.rarity : form.itemB.rarity,
+)
+const protectionRate = computed(() => feeRateForRarity(protectedRarity.value))
+const insuranceFee = computed(() => insuranceFeeFor(protectedValue.value, form.insurance, protectedRarity.value))
 const previewItemA = computed(() => ({ owner: 'You', ...form.itemA }))
 const previewItemB = computed(() => ({ owner: form.counterparty, ...form.itemB }))
 
 function submitTrade() {
+  if (!form.itemA.name || !form.itemB.name || protectedValue.value <= 0) return
+
   isCreating.value = true
   window.setTimeout(() => {
     const trade = createTrade(form)
@@ -148,10 +152,4 @@ function submitTrade() {
   }, 1400)
 }
 
-const money = (value) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(value)
 </script>

@@ -1,6 +1,17 @@
 import { computed, reactive } from 'vue'
 
-const insuranceRate = 0.015
+const protectionFeeRates = {
+  Normal: 0.095,
+  Common: 0.085,
+  Uncommon: 0.075,
+  Rare: 0.065,
+  Epic: 0.055,
+  Legendary: 0.045,
+  Mythic: 0.035,
+}
+
+const rarityOptions = Object.keys(protectionFeeRates)
+const withdrawalFeeRate = 0.0299
 
 const state = reactive({
   wallet: {
@@ -8,14 +19,36 @@ const state = reactive({
     lockedMargin: 0,
   },
   user: {
-    handle: 'RyotaShield',
+    handle: 'John Doe',
+    role: 'Middleman',
+    guildRank: 'Vault Warden',
+    avatarInitials: 'JD',
     kycStatus: 'Verified Trader',
     steamLinked: true,
     discordLinked: true,
     creditScore: 842,
     completedTrades: 128,
     disputeWinRate: 97,
+    evidenceQuality: 94,
+    marginCapacity: 12500,
   },
+  dashboardSeries: {
+    labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'],
+    escrowVolume: [4, 7, 5, 9, 8, 6],
+    feeRevenue: [180, 420, 360, 690, 610, 510],
+    lockedMargin: [1200, 3600, 2800, 5200, 4100, 900],
+  },
+  profileBadges: [
+    { label: 'Steam linked', type: 'identity' },
+    { label: 'Discord linked', type: 'identity' },
+    { label: 'Verified Trader', type: 'trust' },
+    { label: 'Premium Protector', type: 'protection' },
+  ],
+  profileActivity: [
+    { id: 'TR-1036', label: 'Abyssal Rogue Daggers guarded', result: 'Completed', rarity: 'Epic' },
+    { id: 'TR-1027', label: 'Phoenix Mount margin audit', result: 'Verified', rarity: 'Mythic' },
+    { id: 'TR-1019', label: 'Moonlit Sorcerer Set evidence review', result: 'Resolved', rarity: 'Legendary' },
+  ],
   trades: [
     {
       id: 'TR-1048',
@@ -47,7 +80,7 @@ const state = reactive({
       status: 'Items Exchanging',
       timelineStep: 3,
       evidenceUrl: 'https://medal.tv/games/mmorpg/clips/trade-proof-1036',
-      middleman: 'RyotaShield',
+      middleman: 'John Doe',
       createdAt: '1 hr ago',
     },
   ],
@@ -62,8 +95,26 @@ function requiredMargin(trade) {
   return Math.max(Number(trade.itemA.value), Number(trade.itemB.value))
 }
 
-function insuranceFeeFor(value, insured) {
-  return insured ? value * insuranceRate : 0
+function feeRateForRarity(rarity) {
+  return protectionFeeRates[rarity] ?? protectionFeeRates.Legendary
+}
+
+function protectedItemFromPair(itemA, itemB) {
+  return Number(itemA.value) >= Number(itemB.value) ? itemA : itemB
+}
+
+function protectedItemForTrade(trade) {
+  return protectedItemFromPair(trade.itemA, trade.itemB)
+}
+
+function insuranceFeeFor(value, insured, rarity = 'Legendary') {
+  return insured ? Number(value) * feeRateForRarity(rarity) : 0
+}
+
+function insuranceFeeForTrade(trade) {
+  if (!trade.insurance) return 0
+  const protectedItem = protectedItemForTrade(trade)
+  return insuranceFeeFor(protectedItem.value, true, protectedItem.rarity)
 }
 
 function createTrade(payload) {
@@ -128,9 +179,17 @@ export function useTradeStore() {
     pendingTrades,
     activeTrades,
     featuredTradeId,
-    insuranceRate,
+    protectionFeeRates,
+    rarityOptions,
+    withdrawalFeeRate,
+    dashboardSeries: state.dashboardSeries,
+    profileBadges: state.profileBadges,
+    profileActivity: state.profileActivity,
     requiredMargin,
+    feeRateForRarity,
+    protectedItemForTrade,
     insuranceFeeFor,
+    insuranceFeeForTrade,
     createTrade,
     acceptMiddlemanJob,
     updateDisputeEvidence,
