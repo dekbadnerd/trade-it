@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  background: oklch(15% 0.018 74);
+  background: #f7f7f7;
 }
 
 body {
@@ -36,7 +36,7 @@ p {
 }
 
 .card {
-  @apply rounded-lg border border-line bg-panel shadow-premium;
+  @apply rounded-lg border border-line bg-surface shadow-premium;
 }
 
 .premium-bg {
@@ -44,21 +44,20 @@ p {
   inset: 0;
   z-index: -10;
   background:
-    radial-gradient(circle at 12% 0%, oklch(82% 0.15 82 / 0.16), transparent 28rem),
-    radial-gradient(circle at 86% 8%, oklch(69% 0.17 306 / 0.08), transparent 24rem),
-    linear-gradient(180deg, oklch(18% 0.02 74), oklch(13% 0.018 74));
+    radial-gradient(circle at 10% 0%, rgb(255 178 44 / 0.2), transparent 26rem),
+    radial-gradient(circle at 92% 8%, rgb(133 72 54 / 0.12), transparent 22rem),
+    linear-gradient(180deg, #f7f7f7, #f0eeec);
 }
 
 .premium-bg::after {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.18;
+  opacity: 0.34;
   background-image:
-    radial-gradient(circle at 1px 1px, oklch(82% 0.15 82 / 0.22) 1px, transparent 0),
-    linear-gradient(120deg, transparent 0 46%, oklch(82% 0.15 82 / 0.08) 47% 48%, transparent 49% 100%);
-  background-size: 34px 34px, 180px 180px;
-  mask-image: linear-gradient(180deg, black, transparent 78%);
+    radial-gradient(circle at 1px 1px, rgb(133 72 54 / 0.11) 1px, transparent 0);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, black, transparent 70%);
 }
 
 .rune-panel {
@@ -67,18 +66,23 @@ p {
 }
 
 .rune-panel::before {
-  content: "✦";
+  content: "";
   position: absolute;
   right: 1rem;
   top: 0.35rem;
-  color: oklch(82% 0.15 82 / 0.18);
-  font-size: 4rem;
-  line-height: 1;
+  height: 4rem;
+  width: 4rem;
+  border: 1px solid oklch(82% 0.15 82 / 0.16);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, oklch(82% 0.15 82 / 0.16) 0 2px, transparent 3px),
+    conic-gradient(from 45deg, transparent 0 20%, oklch(82% 0.15 82 / 0.16) 21% 23%, transparent 24% 100%);
+  opacity: 0.9;
   pointer-events: none;
 }
 
 .rarity-card {
-  @apply relative overflow-hidden rounded-lg border bg-raised p-4 shadow-rarity;
+  @apply relative overflow-hidden rounded-lg border bg-surface p-4 shadow-rarity;
 }
 
 .rarity-card::before {
@@ -86,9 +90,9 @@ p {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(135deg, var(--rarity-glow, oklch(82% 0.15 82 / 0.16)), transparent 32%),
-    radial-gradient(circle at 82% 18%, var(--rarity-glow, oklch(82% 0.15 82 / 0.16)), transparent 11rem);
-  opacity: 0.76;
+    linear-gradient(135deg, var(--rarity-glow, rgb(255 178 44 / 0.14)), transparent 35%),
+    radial-gradient(circle at 82% 18%, var(--rarity-glow, rgb(255 178 44 / 0.14)), transparent 11rem);
+  opacity: 0.9;
   pointer-events: none;
 }
 
@@ -97,18 +101,18 @@ p {
 }
 
 .rarity-epic {
-  --rarity-glow: oklch(69% 0.17 306 / 0.2);
-  border-color: oklch(69% 0.17 306 / 0.52);
+  --rarity-glow: rgb(124 58 237 / 0.12);
+  border-color: rgb(124 58 237 / 0.38);
 }
 
 .rarity-legendary {
-  --rarity-glow: oklch(78% 0.16 64 / 0.22);
-  border-color: oklch(82% 0.15 82 / 0.55);
+  --rarity-glow: rgb(255 178 44 / 0.18);
+  border-color: rgb(255 178 44 / 0.5);
 }
 
 .rarity-mythic {
-  --rarity-glow: oklch(70% 0.19 28 / 0.2);
-  border-color: oklch(70% 0.19 28 / 0.52);
+  --rarity-glow: rgb(194 65 12 / 0.13);
+  border-color: rgb(194 65 12 / 0.38);
 }
 
 .focus-gold {
@@ -121,8 +125,8 @@ p {
 }
 
 .focus-gold:focus {
-  border-color: oklch(82% 0.15 82);
-  box-shadow: 0 0 0 2px oklch(82% 0.15 82 / 0.32);
+  border-color: #ffb22c;
+  box-shadow: 0 0 0 3px rgb(255 178 44 / 0.34);
 }
 
 .balance-pulse {
@@ -132,17 +136,17 @@ p {
 @keyframes balance-pulse {
   0% {
     transform: scale(1);
-    color: oklch(97% 0.004 86);
+    color: #000000;
   }
 
   45% {
     transform: scale(1.04);
-    color: oklch(91% 0.09 86);
+    color: #854836;
   }
 
   100% {
     transform: scale(1);
-    color: oklch(82% 0.15 82);
+    color: #000000;
   }
 }
 
