@@ -26,8 +26,8 @@
         </div>
 
         <el-card class="vault-controls-card mt-5" shadow="never">
-          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p class="inline-flex items-center gap-2 font-bold text-ink">
+          <div class="vault-controls-layout">
+            <p class="vault-controls-title">
               <el-icon class="text-cocoa"><Lock /></el-icon>
               Vault controls
             </p>
